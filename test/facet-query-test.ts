@@ -3,7 +3,7 @@ import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as sassert from './utils/sassert';
 import * as versionUtils from '../lib/utils/version';
-import { FacetOptions } from '../lib/types';
+import { FacetOptions, JsonFacetOptions } from '../lib/types';
 import { dataOk } from './utils/sassert';
 
 //TODO support all stuff describe there
@@ -114,6 +114,83 @@ describe('Client#createQuery()', function () {
       ) {
         validationJSON['facet.pivot.mincount'] = '10';
         validationJSON['facet.pivot'] = 'cat';
+      }
+
+      assert.deepEqual(data.responseHeader.params, validationJSON);
+      assert.equal(data.debug?.QParser, 'LuceneQParser');
+    });
+  });
+
+  describe('.jsonFacet(options)', function () {
+    it('should create a facet using json.facet', async function () {
+      const facets: JsonFacetOptions = {
+        regions: {
+          field: 'region_s',
+        },
+      };
+      const query = client
+        .query()
+        .q('*:*')
+        .jsonFacet(facets)
+        .debugQuery();
+      const data = await client.search(query);
+      dataOk(data);
+      const validationJSON = {
+        facet: 'true',
+        wt: 'json',
+        debugQuery: 'true',
+        q: '*:*',
+        'json.facet': '{"regions":{"field":"region_s"}}',
+      };
+
+      if (
+        client.solrVersion &&
+        versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
+      ) {
+        validationJSON['facets.count'] = '5';
+        // validationJSON['facet.pivot'] = 'cat';
+      }
+
+      assert.deepEqual(data.responseHeader.params, validationJSON);
+      assert.equal(data.debug?.QParser, 'LuceneQParser');
+    });
+
+    it('should create multiple facets using json.facet', async function () {
+      const facets: JsonFacetOptions = {
+        regions: {
+          field: 'region_s',
+        },
+        salary: {
+          field: 'salary_i',
+          type: 'range',
+          ranges: [
+            { range: '[0, 50000)' },
+            { range: '[50000, 100000)' },
+            { range: '[100000, *]' },
+          ],
+        },
+      };
+      const query = client
+        .query()
+        .q('*:*')
+        .jsonFacet(facets)
+        .debugQuery();
+      const data = await client.search(query);
+      dataOk(data);
+      const validationJSON = {
+        facet: 'true',
+        wt: 'json',
+        debugQuery: 'true',
+        q: '*:*',
+        'json.facet': JSON.stringify(facets),
+      };
+
+      if (
+        client.solrVersion &&
+        versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
+      ) {
+        validationJSON['facets.count'] = '5';
+        // validationJSON['facet.pivot'] = 'cat';
       }
 
       assert.deepEqual(data.responseHeader.params, validationJSON);

@@ -15,6 +15,7 @@ import {
   DateOptions,
   JoinOptions,
   MatchFilterOptions,
+  JsonFacetOptions,
 } from './types';
 import { dateISOify } from './utils/format';
 
@@ -552,6 +553,21 @@ export class Query {
       }
     }
 
+    return self;
+  }
+
+  /**
+   * Create a facet using json.facet.
+   * @param {Object} options - set of options to create a facet
+   * @return {Query}
+   * @api public
+   */
+  jsonFacet(options: JsonFacetOptions): Query {
+    const self = this;
+    this.parameters.push('facet=true');
+    this.parameters.push(
+      'json.facet=' + encodeURIComponent( JSON.stringify(options) )
+    );
     return self;
   }
 

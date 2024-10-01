@@ -152,6 +152,21 @@ export type FacetOptions = {
   method?: string;
   pivot: Pivot;
 };
+
+export type JsonFacetOptions = {
+  [field: string]: {
+    field: string;
+    type?: 'terms' | 'range' | 'query' | 'heatmap';
+    start?: number;
+    end?: number;
+    gap?: number;
+    hardend?: boolean;
+    other?: 'before' | 'after' | 'between' | 'none' | 'all';
+    include?: 'lower' | 'upper' | 'edge' | 'outer' | 'all';
+    ranges?: any;
+  };
+};
+
 export type Pivot = {
   mincount?: number;
   fields;
