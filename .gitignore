@@ -9,3 +9,4 @@ report
 .idea
 package-lock.json
 /dist/
+solr_data/
