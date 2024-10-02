@@ -563,7 +563,7 @@ export class Client {
       Buffer.byteLength(queryString);
     const method =
       this.options.get_max_request_entity_size === false ||
-      approxUrlLength <= this.options.get_max_request_entity_size
+      approxUrlLength <= (this.options.get_max_request_entity_size as number)
         ? 'GET'
         : 'POST';
 
