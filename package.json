@@ -3,16 +3,16 @@
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
-  "version": "0.11.0-rc1",
+  "version": "0.11.0",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"{lib,examples,test}/**/*.ts\"",
     "lint": "eslint \"lib/**/*.ts\" \"test/**/*.ts\"",
     "test-cov": "jscoverage lib lib-cov && mocha -r ts-node/register -R html-cov test/*-test.ts > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.ts lib/*",
-    "solr:current:start": "mkdir -p ./solr_data/data && docker-compose -f docker-compose-solr-9.yml up --build -d solr9",
+    "solr:current:start": "docker-compose -f docker-compose-solr-9.yml up --build -d solr9",
     "solr:current:stop": "docker-compose -f docker-compose-solr-9.yml down",
-    "solr:current:logs": "docker logs solr-node-client_solr8_1",
+    "solr:current:logs": "docker logs solr-node-client_solr9_1",
     "test:current": "mocha -r ts-node/register -R spec test/*-test.ts --client.bigint=true",
     "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
     "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
@@ -52,7 +52,7 @@
     "mocha": "^9.1.2",
     "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
-    "typescript": "4.4.3"
+    "typescript": "^5.6.2"
   },
   "files": [
     "dist/*",
