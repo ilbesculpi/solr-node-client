@@ -566,7 +566,7 @@ export class Query {
     const self = this;
     this.parameters.push('facet=true');
     this.parameters.push(
-      'json.facet=' + encodeURIComponent( JSON.stringify(options) )
+      'json.facet=' + encodeURIComponent(JSON.stringify(options))
     );
     return self;
   }
